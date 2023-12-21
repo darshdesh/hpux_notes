@@ -1,0 +1,235 @@
+HP/UX system administration
+Home | UNIX | Oracle | Code | Practical | Private
+
+HP/UX system administration
+
+
+Basic usage
+Check system version, release and patches,
+uname -r
+swlist -l bundle | grep ' OS'
+swlist -l bundle | grep ' Operating Environment'
+swlist -a state -a patch_state PH*
+Note. B.11.11 = 11i
+Note. B.11.23 = 11i v2
+Note. B.11.31 = 11i v3
+
+Check for CPUs,
+ioscan -fnkC processor
+top
+
+Check for memory and swap,
+swapinfo -a
+dmesg | more  # search for Memory
+top    # real + virtual + free
+
+Check for disks,
+ioscan -fnkC disk
+
+Check for filesystems,
+cat /etc/mnttab
+bdf
+
+Add some user and fix its shell,
+useradd -m user1
+passwd user1
+chsh user1 /usr/local/bin/bash
+
+If you desperately need more space,
+fsadm -b 1048576 /var
+fsadm -b 4194304 /usr
+fsadm -b 5242880 /opt
+lvreduce -L 1024 /dev/vg00/lvol8
+lvreduce -L 4096 /dev/vg00/lvol7
+lvreduce -L 5120 /dev/vg00/lvol6
+Note. if you also want to resize /stand, you may try with "-C y" and "lvlnboot -r" thereafter.
+
+
+Package management
+View some product content,
+swlist -l product | grep -i cde
+swlist -l fileset CDE
+swlist -l file CDE.CDE-MIN
+
+Install products,
+gunzip mutt-1.5.20-ia64-11.23.depot.gz
+unset DISPLAY
+swlist -s /root/mutt-1.5.20-ia64-11.23.depot
+swinstall -s /root/mutt-1.5.20-ia64-11.23.depot mutt
+
+If you experience errors, check the logs,
+cd /var/adm/sw/queue/logfiles
+cd 000X
+more logfile
+remove the failed software install,
+swremove BUNDLE
+and try again, once you fixed the issue,
+swinstall /absolute/path/to/BUNDLE
+
+
+HBA configuration & multipathing
+Display hard drives & LUNs,
+ioscan -fnC disk
+Note. "-funC" for "usable" disks
+Note. "insf" or "insf -e -C disk" to force device creation
+Note. "-k" as user
+
+Display Fiber Channel adapters,
+ioscan -fnC fc
+display the HBA's WWN,
+fcmsutil /dev/fcd0
+note. "/dev/fcdX" or "/dev/tdX"
+check for LUNs,
+ioscan -fnC disk
+
+For HP/UX 11.23
+Configure PVLink (11.23 - Path failover through LVM). Once your VG is working on one path (PV needs to be created on one of the paths first, see the "LVM configuration" paragraph), add the alternate paths to it,
+vgextend vg01 /dev/dsk/c2t0d1 /dev/dsk/c6t0d1 /dev/dsk/c8t0d1
+Note. otherwise purchase and use SecurePath
+
+For HP/UX 11.31
+SAN Multipath option comes with OS. The new storage stack includes dynamic multipath balancing.
+
+
+Backup/restore
+To recover files to original location,
+frecover -f /dev/rmt/0m -xov -i /source_directory
+
+To recover files relative to the current working directory:
+cd /destination_directory
+frecover -f /dev/rmt/0m -xXov -i /source_directory
+
+Refs.
+forums11.itrc.hp.com/service/forums/questionanswer.do?threadId=2801&admit=109447626+1253637912723+28353475
+docs.hp.com/en/B2355-90672/ch09s08.html
+docs.hp.com/en/B2355-90950/ch06s04.html
+
+
+Single user mode
+Interrupt the bootloader timeout and boot single user,
+boot -is vmunix
+
+Define PATH, TERM and proceed...,
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+TERM=vt100
+export PATH TERM
+...
+Note. if you have bash installed,
+/usr/local/bin/bash
+Note. if you need to use LVM,
+vgchange -a y VGNAME
+Note. switch to init 3,
+sync
+init 3
+
+
+Misc
+Get a decent environment with the default shell and vars,
+stty erase ^?
+export TERM=xterm
+
+Check the logs,
+tail -f /var/adm/syslog/syslog.log
+tail -f /var/adm/syslog/mail.log
+
+Shutdown,
+cd /
+shutdown -h -y now
+reboot,
+cd /
+shutdown -r -y now
+#reboot
+
+To give an alternate default shell for all normal users,
+vi /etc/profile
+add,
+if [ $LOGNAME != root \
+-a $LOGNAME != daemon \
+-a $LOGNAME != bin \
+-a $LOGNAME != sys \
+... ]; then
+command
+fi
+
+To add the rc.local feature to HP/UX,
+cd /sbin
+vi rc
+add at the end,
+/bin/ksh /etc/rc.local
+then your rc.local script,
+cd /etc
+vi rc.local
+like e.g.,
+#!/bin/ksh
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$HOME/bin\
+:/usr/local/apache2/bin:/usr/local/mysql/bin
+export PATH
+
+print "starting mysqld"
+mysqld_safe --user=mysql &
+
+print "starting apache2"
+apachectl start
+fix perms,
+chmod 755 rc.local
+
+Instead of "diff -r", use,
+dircmp -s -d folder1 folder2 2>&1 | more
+Note. this only works directory per directory.
+
+Check if only space & tabs:
+od -c file
+
+Free the 80 port,
+cd /opt/DevMan
+vi DevManBE.ini
+changer,
+[Service]
+AutoStart=1
+Fresh Install=0
+[Web]
+Port=8081
+apply,
+cd /sbin/rc3.d
+./DevMan stop
+./DevMan start
+
+To mount an ISO image on HP/UX 11.31 (11iv3),
+lvcreate -n cdrom -L 5000 vg00
+cd /var/tmp
+dd if=image.iso of=/dev/vg00/rcdrom bs=4096k
+  mkdir -p /cdrom
+mount /dev/vg00/cdrom /cdrom
+Note. lvcreate -L in MB
+Note. dd against the raw device (rcdx)
+
+To mount an ISO (w/ or w/o rockridge) on older HP/UX releases,
+/usr/sbin/pfs_mountd &
+/usr/sbin/pfsd &
+then edit or create this file,
+vi /etc/pfs_fstab
+with the following contents:
+/dev/dsk/c0t4d0 /ISO_CDROM pfs-iso9660 xlat=unix 0 0
+/dev/dsk/c0t4d0 /ISO_RR_CDROM pfs-rrip xlat=unix 0 0
+note. create the dirs,
+mkdir /ISO_CDROM
+mkdir /ISO_RR_CDROM
+mount the CDrom,
+pfs_mount /ISO_CDROM
+ls -l /ISO_CDROM
+umount the CDrom,
+pfs_umount /ISO_CDROM
+same with long filenames
+pfs_mount /ISO_RR_CDROM
+pfs_umount /ISO_RR_CDROM
+Refs.
+sysunconfig.net/unixtips/hp_cdrom.txt
+forums11.itrc.hp.com/service/forums/questionanswer.do?admit=109447626+1221656305536+28353475&threadId=1060487
+forums12.itrc.hp.com/service/forums/questionanswer.do?admit=109447627+1221655722783+28353475&threadId=1153978
+
+
+Software references
+Software Depot home : software.hp.com/
+IT Resource Center : itrc.hp.com/
+Porting And Archive Centre : hpux.connect.org.uk/
+Index of /gcc : hpacxx.external.hp.com/gcc/
