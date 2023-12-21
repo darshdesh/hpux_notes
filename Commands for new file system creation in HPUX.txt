@@ -1,0 +1,837 @@
+GenericSysName [HP Release B.11.23] (see /etc/issue)
+
+#######################################################
+     NOTICE TO USERS
+#######################################################
+     This machine is being monitored and any missuse of
+     this machine will be liable for actions as per
+     Maruti Security Policy and other applicable laws.
+#######################################################
+     Unauthorized access is strictly prohibited.
+#######################################################
+
+Last   successful login for hp_bk: Thu Mar  3 19:48:38 IST-5:30 2011 on pts/td
+Last unsuccessful login for hp_bk: Thu Mar  3 20:08:27 IST-5:30 2011 on pts/td
+Please wait...checking for disk quotas
+(c)Copyright 1983-2003 Hewlett-Packard Development Company, L.P.
+(c)Copyright 1979, 1980, 1983, 1985-1993 The Regents of the Univ. of California
+(c)Copyright 1980, 1984, 1986 Novell, Inc.
+(c)Copyright 1986-2000 Sun Microsystems, Inc.
+(c)Copyright 1985, 1986, 1988 Massachusetts Institute of Technology
+(c)Copyright 1989-1993  The Open Software Foundation, Inc.
+(c)Copyright 1990 Motorola, Inc.
+(c)Copyright 1990, 1991, 1992 Cornell University
+(c)Copyright 1989-1991 The University of Maryland
+(c)Copyright 1988 Carnegie Mellon University
+(c)Copyright 1991-2003 Mentat Inc.
+(c)Copyright 1996 Morning Star Technologies, Inc.
+(c)Copyright 1996 Progressive Systems, Inc.
+
+
+                  RESTRICTED RIGHTS LEGEND
+Use, duplication, or disclosure by the U.S. Government is subject to
+restrictions as set forth in sub-paragraph (c)(1)(ii) of the Rights in
+Technical Data and Computer Software clause in DFARS 252.227-7013.
+
+
+                  Hewlett-Packard Company
+                  3000 Hanover Street
+                  Palo Alto, CA 94304 U.S.A.
+
+Rights for non-DOD U.S. Government Departments and Agencies are as set
+forth in FAR 52.227-19(c)(1,2).
+# su -
+(c)Copyright 1983-2003 Hewlett-Packard Development Company, L.P.
+(c)Copyright 1979, 1980, 1983, 1985-1993 The Regents of the Univ. of California
+(c)Copyright 1980, 1984, 1986 Novell, Inc.
+(c)Copyright 1986-2000 Sun Microsystems, Inc.
+(c)Copyright 1985, 1986, 1988 Massachusetts Institute of Technology
+(c)Copyright 1989-1993  The Open Software Foundation, Inc.
+(c)Copyright 1990 Motorola, Inc.
+(c)Copyright 1990, 1991, 1992 Cornell University
+(c)Copyright 1989-1991 The University of Maryland
+(c)Copyright 1988 Carnegie Mellon University
+(c)Copyright 1991-2003 Mentat Inc.
+(c)Copyright 1996 Morning Star Technologies, Inc.
+(c)Copyright 1996 Progressive Systems, Inc.
+
+
+                  RESTRICTED RIGHTS LEGEND
+Use, duplication, or disclosure by the U.S. Government is subject to
+restrictions as set forth in sub-paragraph (c)(1)(ii) of the Rights in
+Technical Data and Computer Software clause in DFARS 252.227-7013.
+
+
+                  Hewlett-Packard Company
+                  3000 Hanover Street
+                  Palo Alto, CA 94304 U.S.A.
+
+Rights for non-DOD U.S. Government Departments and Agencies are as set
+forth in FAR 52.227-19(c)(1,2).
+You have mail.
+
+Value of TERM has been set to "xterm".
+WARNING:  YOU ARE SUPERUSER !!
+
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25262744 24873128   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006144 1990269   50% /oem
+/dev/vg00/lvol5    6291456 6053968  237352   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533304 5438216   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100049212 42387635   70% /application
+/dev/archvg/lvarch 52428800 7451920 42165960   15% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8391662 6879083   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 152160499 8123353   95% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata16
+                   157286400   55019 147404427    0% /data16
+/dev/datavg16/lvdata17
+                   157286400   55019 147404427    0% /data17
+
+sr4_pr#lvdisplay /dev/datavg15/lvdata15
+--- Logical volumes ---
+LV Name                     /dev/datavg15/lvdata15
+VG Name                     /dev/datavg15
+LV Permission               read/write
+LV Status                   available/syncd
+Mirror copies               0
+Consistency Recovery        MWC
+Schedule                    parallel
+LV Size (Mbytes)            157152
+Current LE                  39288
+Allocated PE                39288
+Stripes                     0
+Stripe Size (Kbytes)        0
+Bad block                   on
+Allocation                  strict
+IO Timeout (Seconds)        default
+
+sr4_pr#
+sr4_pr#
+sr4_pr#lvdisplay /dev/datavg16/lvdata16
+--- Logical volumes ---
+LV Name                     /dev/datavg16/lvdata16
+VG Name                     /dev/datavg16
+LV Permission               read/write
+LV Status                   available/syncd
+Mirror copies               0
+Consistency Recovery        MWC
+Schedule                    striped
+LV Size (Mbytes)            153600
+Current LE                  38400
+Allocated PE                38400
+Stripes                     16
+Stripe Size (Kbytes)        4
+Bad block                   on
+Allocation                  strict
+IO Timeout (Seconds)        default
+
+sr4_pr#lvdisplay /dev/datavg16/lvdata16
+--- Logical volumes ---
+LV Name                     /dev/datavg16/lvdata16
+VG Name                     /dev/datavg16
+LV Permission               read/write
+LV Status                   available/syncd
+Mirror copies               0
+Consistency Recovery        MWC
+Schedule                    striped
+LV Size (Mbytes)            153600
+Current LE                  38400
+Allocated PE                38400
+Stripes                     16
+Stripe Size (Kbytes)        4
+Bad block                   on
+Allocation                  strict
+IO Timeout (Seconds)        default
+
+sr4_pr#fstyp /dev/datavg16/lvdata16
+vxfs
+
+sr4_pr#fstyp -v /dev/datavg16/lvdata16
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411841
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 0
+f_fsindex: 9
+f_size: 157286400
+sr4_pr#fstyp -v /dev/datavg15/lvdata15
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 160923648
+f_bfree: 6208182
+f_bavail: 5820171
+f_files: 1552332
+f_ffree: 1552044
+f_favail: 1552044
+f_fsid: 1077346305
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 160923648
+
+sr4_pr#umount /data17
+
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25254984 24880840   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006153 1990261   50% /oem
+/dev/vg00/lvol5    6291456 6053992  237328   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533304 5438216   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100072283 42365962   70% /application
+/dev/archvg/lvarch 52428800 7759127 41877953   16% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8391690 6879055   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 156257540 4282377   97% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata16
+                   157286400   55019 147404427    0% /data16
+
+sr4_pr#newfs -F vxfs -o largefiles /dev/datavg16/rlvdata17
+    version 5 layout
+    157286400 sectors, 157286400 blocks of size 1024, log size 16384 blocks
+    unlimited inodes, largefiles supported
+    157286400 data blocks, 157230352 free data blocks
+    4800 allocation units of 32768 blocks, 32768 data blocks
+
+
+sr4_pr#mount /dev/datavg16/lvdata17 /data17
+sr4_pr#umount /data17
+
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25255072 24880760   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006354 1990072   50% /oem
+/dev/vg00/lvol5    6291456 6053992  237328   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533312 5438208   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100085903 42353168   70% /application
+/dev/archvg/lvarch 52428800 7759127 41877953   16% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8391691 6879054   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 156257540 4282377   97% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata16
+                   157286400   55019 147404427    0% /data16
+
+sr4_pr#mount -o largefiles /dev/datavg16/lvdata17 /data17
+sr4_pr#fstyp -v /dev/datavg16/lvdata17
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411842
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 157286400
+sr4_pr#
+sr4_pr#
+
+sr4_pr#fstyp -v /dev/datavg15/lvdata15
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 160923648
+f_bfree: 6208182
+f_bavail: 5820171
+f_files: 1552332
+f_ffree: 1552044
+f_favail: 1552044
+f_fsid: 1077346305
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 160923648
+
+sr4_pr#fstyp -v /dev/datavg15/lvdata15
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 160923648
+f_bfree: 6208182
+f_bavail: 5820171
+f_files: 1552332
+f_ffree: 1552044
+f_favail: 1552044
+f_fsid: 1077346305
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 160923648
+
+sr4_pr#fstyp -v /dev/datavg16/lvdata17
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411842
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 157286400
+
+sr4_pr#fstyp -v /dev/datavg16/lvdata16
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411841
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 0
+f_fsindex: 9
+f_size: 157286400
+
+sr4_pr#chown -R oraprod:dba /data17
+
+sr4_pr#ls -ltr /data17
+total 0
+drwxr-xr-x   2 oraprod    dba             96 Mar  3 20:25 lost+found
+
+sr4_pr#fuser -c /data16
+/data16:    10756c    8874c
+
+sr4_pr#fuser -ck /data16
+/data16:    10756c    8874c
+
+sr4_pr#umount /data16
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25255232 24880616   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006236 1990181   50% /oem
+/dev/vg00/lvol5    6291456 6054024  237296   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533312 5438208   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100099698 42340182   70% /application
+/dev/archvg/lvarch 52428800 7759127 41877953   16% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8401149 6870185   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 156257540 4282377   97% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata17
+                   157286400   55019 147404427    0% /data17
+
+sr4_pr#fstyp -v /dev/datavg16/lvdata16
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411841
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 0
+f_fsindex: 9
+f_size: 157286400
+sr4_pr#fstyp -v /dev/datavg16/lvdata17
+vxfs
+version: 5
+f_bsize: 8192
+f_frsize: 1024
+f_blocks: 157286400
+f_bfree: 157231381
+f_bavail: 147404420
+f_files: 39307876
+f_ffree: 39307844
+f_favail: 39307844
+f_fsid: 1077411842
+f_basetype: vxfs
+f_namemax: 254
+f_magic: a501fcf5
+f_featurebits: 0
+f_flag: 16
+f_fsindex: 9
+f_size: 157286400
+
+sr4_pr#newfs -F vxfs -o largefiles /dev/datavg16/rlvdata16
+    version 5 layout
+    157286400 sectors, 157286400 blocks of size 1024, log size 16384 blocks
+    unlimited inodes, largefiles supported
+    157286400 data blocks, 157230352 free data blocks
+    4800 allocation units of 32768 blocks, 32768 data blocks
+
+sr4_pr#mount -o largefiles /dev/datavg16/lvdata16 /data16
+
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25255296 24880560   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006232 1990186   50% /oem
+/dev/vg00/lvol5    6291456 6054032  237288   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533216 5438304   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100113442 42327288   70% /application
+/dev/archvg/lvarch 52428800 7759127 41877953   16% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8401151 6870182   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 156257540 4282377   97% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata17
+                   157286400   55019 147404427    0% /data17
+/dev/datavg16/lvdata16
+                   157286400   55019 147404427    0% /data16
+
+sr4_pr#ls -ltr /data17
+total 0
+drwxr-xr-x   2 oraprod    dba             96 Mar  3 20:25 lost+found
+
+sr4_pr#ls -ltr /data16
+total 0
+drwxr-xr-x   2 root       root            96 Mar  3 20:44 lost+found
+
+sr4_pr#chown -R oraprod:dba /data16
+
+sr4_pr#ls -ltr /data16
+total 0
+drwxr-xr-x   2 oraprod    dba             96 Mar  3 20:44 lost+found
+sr4_pr#bdf
+Filesystem          kbytes    used   avail %used Mounted on
+/dev/vg00/lvol3    2097152  381016 1703184   18% /
+/dev/vg00/lvol1     511672   82216  378288   18% /stand
+/dev/vg00/lvol8    50331648 25255288 24880568   50% /var
+/dev/vg00/lvol7    8388608 6428288 1945056   77% /usr
+/dev/vg00/lvol4    3145728 2162936  976024   69% /tmp
+/dev/vg00/lvol6    6291456 4928872 1352000   78% /opt
+/dev/vg00/oem      4128768 2006232 1990186   50% /oem
+/dev/vg00/lvol5    6291456 6054032  237288   96% /home
+/dev/datavg15/lvdata15
+                   160923648 154715466 5820229   96% /data15
+cl01:/endusers     20971520 15533216 5438304   74% /endusers
+/dev/datavg1/lvdata1
+                   160825344 151060362 9154728   94% /data1
+/dev/datavg2/lvdata2
+                   160825344 154738687 5706295   96% /data2
+/dev/datavg3/lvdata3
+                   160825344 153270953 7082301   96% /data3
+/dev/datavg4/lvdata4
+                   145096704 100113458 42327270   70% /application
+/dev/archvg/lvarch 52428800 7759127 41877953   16% /archive
+/dev/redovg01/lvmirr03
+                    327680  308398   18084   94% /SR4mirr05
+/dev/redovg01/lvorig01
+                    327680  308399   18082   94% /SR4orig01
+/dev/redovg02/lvmirr01
+                    327680  308398   18084   94% /SR4mirr06
+/dev/redovg02/lvorig02
+                    327680  308398   18084   94% /SR4orig02
+/dev/redovg03/lvmirr02
+                    327680  308398   18084   94% /SR4mirr07
+/dev/redovg03/lvorig03
+                    327680  308398   18084   94% /SR4orig03
+/dev/datavg4/lvora 15728640 8401151 6870182   55% /orahome
+/dev/datavg5/lvdata5
+                   160825344 153015409 7321874   95% /data5
+/dev/datavg6/lvdata6
+                   160825344 152644866 7669259   95% /data6
+/dev/datavg7/lvdata7
+                   160825344 152067353 8210677   95% /data7
+/dev/datavg8/lvdata8
+                   160825344 156257540 4282377   97% /data8
+/dev/datavg9/lvdata9
+                   160825344 152646897 7667356   95% /data9
+/dev/datavg10/lvdata10
+                   160825344 151624929 8625451   95% /data10
+/dev/redovg04/lvmirr05
+                    327680  308398   18084   94% /SR4mirr08
+/dev/redovg04/lvorig04
+                    327680  308398   18084   94% /SR4orig04
+/dev/redovg05/lvmirr04
+                    327680  308398   18084   94% /SR4mirr01
+/dev/redovg05/lvorig05
+                    327680  308398   18084   94% /SR4orig05
+/dev/redovg06/sr4orig06
+                    393216  308414   79509   80% /SR4orig06
+/dev/redovg06/sr4mirr02
+                    393216  308414   79509   80% /SR4mirr02
+/dev/redovg07/sr4orig07
+                    393216  308414   79509   80% /SR4orig07
+/dev/redovg07/sr4mirr03
+                    393216  308414   79509   80% /SR4mirr03
+/dev/redovg08/sr4orig08
+                    393216  308414   79509   80% /SR4orig08
+/dev/redovg08/sr4mirr04
+                    393216  308414   79509   80% /SR4mirr04
+/dev/datavg11/lvdata11
+                   160694272 156015424 4386448   97% /data11
+/dev/datavg12/lvdata12
+                   160694272 152655058 7536824   95% /data12
+/dev/datavg13/lvdata13
+                   160694272 152116317 8041894   95% /data13
+/dev/datavg14/lvdata14
+                   160694272 157621248 2881020   98% /data14
+/dev/datavg16/lvdata17
+                   157286400   55019 147404427    0% /data17
+/dev/datavg16/lvdata16
+                   157286400   55019 147404427    0% /data16
+
