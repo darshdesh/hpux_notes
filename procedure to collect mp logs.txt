@@ -1,0 +1,26 @@
+Telnet to MP IP thru putty, be sure session loggin is enable to capture all activity you have to do.
+
+
+1. Telnet to MP IP
+2. Login: Admin
+3. Password: Admin
+4. MP>vfp         Ctrl+b   (to come out)
+5. Mp> sl
+6. e (System Event)
+7. d (dump)
+8. y (yes)
+9. q (Quit)
+10. f (Forward Progress)
+11. d (dump)
+12. y (yes)
+13. q (Quit)
+14. q (Quit)
+15. Mp> cm
+16. Mp:cm>sysrev
+17. mp:cm>df -all -nc
+18. Mp:cm>df -all -v h -nc
+19. MP>cm>ps
+20.  MP>cm>ss
+21. Mp:cm>ma
+22. MP>vfp         Ctrl+b   (to come out)
+23. mp>exit
