@@ -1,0 +1,1270 @@
+HP-UX Tips and Procedures.
+ 
+Resetting GSP from Command line
+stty +resetGSP </dev/GSPdiag1
+ 
+Find out the boot path from command line
+echo "boot_string/S" | adb /stand/vmunix /dev/mem
+ 
+How to extend a file system in hp-ux
+lvextend -L 1500 /dev/vgxx/lvolx (assuming the final size will be 1.5GB)
+fsadm -F vxfs -b 1500m /xxx     (xxx=mount point) If you have online JFS.
+or
+umount /xxx
+extendfs -F vxfs /dev/vgxx/rlvolx
+ 
+How to create a patch depot
+swcopy -s /soft/patch/PHSS_35546.depot PHSS35546 @ /soft/patch/depot
+ 
+To Display mode parameter of a SCSI Device
+/usr/sbin/scsictl -a -m ir=1 -m ir /dev/rdsk/c1t15d0
+ 
+How to create a file system
+First check the available disks and minor no for the VG you want to create
+
+ll /dev/*/group ( Will look like this)
+crw-rw-r-- 1 root sys 64 0x010000 Sep 16 2006 /dev/vg-ignite/group
+crw-r----- 1 root sys 64 0x000000 Sep 16 2006 /dev/vg00/group
+
+Note down the next available minor no. In this example we can use
+0x020000 (0x for hex then 02 is for VG and next 0000 is reserved for logical volumes)
+
+mkdir /dev/vg-test
+mknod /dev/vg-test/group c 64 0x02000
+vgcreate /dev/vg-test /dev/dsk/c1t15d0 (assuming on this disk you want to create VG)
+then
+lvcreate -r n -L 20480 -n lv-TEST /dev/vg-TEST (assuming 20GB LV Size you want)
+newfs -F fxfs -o largefiles /dev/vg-test/rlv-test
+mount /dev/vg-test/lv-test /test
+ 
+To check the contents of a Itanium based Systems make_tape_recovery do the following. you use -xvf to restore any file too.
+mt -t /dev/rmt/0mn rew
+mt -t /dev/rmt/0mn fsf 22
+tar -tvf /dev/rmt/0mn
+ 
+Find the list of files in a bundle.
+First find the Bundle name from the Depot
+swlist -l bundle -s /patch/11.00/depot
+Then
+swlist -l file -l bundle -s/patch/11.00/depot PB_11_00_march_2003
+ 
+How to make a Software package
+First swcopy to a depot
+then 
+Ex. Assuming the the depot is /patch/11.00/depot
+Create the bundle first
+make_bundles -B i -n "PB_11_00_march_2003" -t "Patch Database March 2003" \
+-o /patch/11.00/depot/PB_March_2003_11.00.psf   -r 1.0 /patch/11.00/depot
+
+then run 
+
+swpackage -s /patch/11.00/PB_March-2003_11.00.psf  -xlayout_version=1.0 -xreinstall_files=true \
+-d /patch/11.00/depot
+ 
+To unregister a CD-ROM depot mounted at /mnt/cd, you would type:
+swreg -l depot -u /mnt/cd
+
+To register the same depot (mounted at /mnt/cd on the local host) as a depot to be available on the network, type:
+swreg -l depot /mnt/cd
+
+The following example enables direct access from one or two other systems to the HWEnable11i depot on the Support Plus CD, assuming the Support Plus CD is mounted at /cdrom:
+
+swreg -l depot /cdrom/HWEnable11i0.
+ 
+SCSI Tuning in HP-UX
+scsictl -a /dev/rdsk/c4t6d0 -- too see the parameters
+scsictl -m queue_depth=32 /dev/rdsk/c4t6d0 - to change from default 8k to 32k
+scsictl -c get_lun_parms /dev/rdsk/cxtxdx does the same as scsictl -a
+
+to set the immediate report on and display all mode parameters
+scsictl -a -m ir=1 -m ir /dev/rdsk/c4t6d0
+
+to make the changes permanent
+kctune
+
+to see the scsi_max-q_depth settings run 
+kctune scsi_max_qdepth
+
+to change it from default 8 to desired 32k permanently 
+kctune scsi_max_qdepth=32 and type y when it asks for confirmation
+
+Basic instructions, for setting up a HPUX dhcp client
+a) The name resolution for localhost/loopback must work without any network. So:
+ /etc/hosts
+ 127.0.0.1 localhost loopback
+ /etc/nsswitch.conf
+ hosts: files [NOTFOUND=continue] dns
+
+b) Setup the rc-config file for dhcp:
+/etc/rc.config.d/netconf:
+HOSTNAME=""
+PERATING_SYSTEM=HP-UX
+LOOPBACK_ADDRESS=127.0.0.1
+INTERFACE_NAME[0]=lan0
+IP_ADDRESS[0]=
+SUBNET_MASK[0]=255.255.255.255
+BROADCAST_ADDRESS[0]=""
+INTERFACE_STATE[0]=""
+DHCP_ENABLE[0]=1
+GATED=0
+GATED_ARGS=""
+RDPD=0
+RARP=0
+PAY ATTENTION: In this file the hostname ist NOT set, the subnetmask is set to 255.255.255.255 and all route entries are removed!
+
+c) Remove all files, that start with dhcp
+rm /etc/dhcp*
+
+d) create a blank /etc/dhcpclient.data with permissions 644:
+touch /etc/dhcpclient.data
+chmod 644 /etc/dhcpclient.data
+
+e) in /etc/inetd.conf comment the line which starts with "bootps"
+ 
+f) Create a rc file, that blanks out the /etc/dhcpclient.data at each shutdown. The link should be a K-Link in /sbin/rc0.d/ (For instructions how to create a working rc script see /sbin/init.d/template)
+
+How to create a robotic device for Veritas netbackup difficult way :
+
+Steps to create a device file manually for Robot for Veritas netbackup
+ioscan -fnk|grep for the controller the robot has connecetd
+Note down the Ext Bus Card instance no.
+Example :
+We have a IBM 3581 Scaller Library Connected to SCSI LVD Card at Hardware Address 0/0/1/0 .SCSI ID of the Library is 14, LUN no. of the Robot is 1 and the drive LUN no. is 0
+
+Now if we run ioscan -fnk|egrep -i '0/0/1/0' and look for the line c8xx and interface the Instance no. in column I (2nd column) shows the instance as 0. now run and the results are
+lsdev |grep -i sctl
+203 -1 sctl ctl
+We need the major no which is 203 from here. Now we have all required information we need.
+mknod /dev/sctl/c0t14d1 c 203 0x00e100
+
+c0=controller 0 i.e. 0/0/1
+t14 = SCSI ID14 of the Library
+d1 = LUN No 1 ( Lun no. of the robot is 1 in this case)
+
+203 = major no we got from lsdev output
+minor no follows this format
+0xiitl0o
+Now lets explain here
+0x= Standard Hex no starting
+ii=00 = 0 is the Card Instance no we got from ioscan "I" Column (in case of card IN 1 it will be 01 and so forth)
+t=e = 14 (hex) (target ID, SCSI ID)
+L=1 = Lun no of the Robot
+0 = 0 always Zero (reserved portion of Minor no. This field is always 0)
+o = Operational field for the SCTl Driver
+
+For SCTL the Values are
+0 (Zero) - Normal open
+1 (one) - ATN not used with select , for backward compatibility
+2 (two) Inhibits inquiry at open
+Now You have to build a new kernel
+cd /stand/build
+vi /stand/system and add these two lines
+
+sctl
+driver 0/0/1/0.14.1 sctl
+
+save and quit
+
+/usr/sbin/mk_kernel -s /stand/system
+kmupdate
+reboot
+
+ 
+
+How to create a robotic device for Veritas netbackup easy way :
+
+
+For Both SCSI & Fiber Robots 
+
+For IBM 3584 Library
+Use last three characters will be 100 instead of 200 as in /dev/rac directory and major no. will be 203 (same as sctl)
+
+The reason to change it to 100 is the robotic device is controlled by the 1st Tape Drive in the Tape partition so the robot and the drive is same device (Drive scsi/fscsi id is 0 and robot is 1 , always)
+for ex. ll /dev/rac/c6t7d1 231 0x062e200
+then the major and minor no for new device will be 203 and 0x062e100 respectively.
+For STK L700/L180/L3000/ and Quantum ATLP4000 Libraries the minor no. will be same as the device in /dev/rac.
+
+Now You have to build a new kernel
+cd /stand/build
+vi /stand/system and add these two lines
+
+sctl
+driver 0/0/1/0.14.1 sctl
+
+save and quit
+
+/usr/sbin/mk_kernel -s /stand/system
+kmupdate
+reboot
+
+ 
+
+ Setting UP Quota on HPUX
+
+1. Mount the file system
+    mount /dev/vg01/lvol4 /home
+
+2. cpset /dev/null /home/quotas 600 root bin
+
+( empty file created with at the root of file system with owner root   grp bin permission for root)
+3. /usr/sbin/edquota user
+4. type the following to limit
+    fs /home blocks ( soft = 10000, hard=12000) inodes ( soft = 200, hard = 300 )
+   to set the time limit
+   edquota –t username
+    type following
+    fs /home blocks time limit = 10.00 days, files time limit = 15.00 days
+5. turn on quotas
+    quotaon –v /home
+6. check the file system for quota
+    quotacheck /dev/vg02/lvol3
+7. report the quotas
+   repquota /home
+8.report the summary of qwnership
+   quot /home
+9. report individuals
+    /usr/bin/quota –v
+ 
+
+VXVM Setup IN HP-UX
+
+ 
+
+1. Run vxinstall to initialize at least one disk in rootdg.
+
+2. Then you run vxdiskadm to add other disks
+
+3. Create a /etc/vx/disks.exclude file if you want some disks to be excluded from vxvm
+
+4. The files /etc/vx/cntrls.exclude and /etc/vx/disks.exclude are for the controllers and disks which will be   
+
+    excluded to be used by vxinstall or vxdiskadm so the disks under     that controllers or the sepcified disks
+
+    will not be included to any Disk Group. But all the other commmands will work
+
+5. To determine whether the volume daemon is enabled, use the following
+    command: vxdctl mode
+
+6. To enable the volume daemon, use the following command:
+    vxdctl enable
+
+7. To start the vxconfigd daemon, use the following command:
+    vxconfigd
+
+8. Verify that vxiod daemons are running by entering this command:
+    vxiod
+
+9. If no vxiod daemons are currently running, start some by entering this
+    command: vxiod set 10
+    where 10 can be substituted by the desired number of vxiod daemons. It is recommended that at least one
+
+    vxiod daemon exist for each CPU in the system.
+
+Initial Setup
+Step 1. Place disks under Volume Manager control.
+Step 2. Create new disk groups (if you do not want to use rootdg or you want
+other disk groups).
+Step 3. Create volumes.
+Step 4. Put file system(s) in volumes.
+
+Options
+
+• Designate hot-relocation spare disks.
+• Add mirrors to volumes if necessary.
+
+Maintenance
+
+• Resize volumes and file systems.
+• Add more disks/disk groups.
+• Create snapshots.
+
+
+vxvm Commands
+
+To display free space in the system, use the following command:
+vxdg free
+
+To display free space for a disk group, use the following command:
+vxdg -g diskgroup free
+
+To display general information for all subdisks, use the following
+command:
+vxprint -st
+
+To display complete information about a particular subdisk by using the following command:
+vxprint -l subdisk_name (ex disk01)
+
+Creating Volumes
+
+To create a new volume by entering:
+vxassist make volume_name length
+(Ex. vxassist make god 4000m)
+
+To create a new volume in a particular subdisk by entering:
+vxassist make volume_name length subdisk
+(Ex. vxassist make god 4000m disk02)
+
+to create a 30 megabyte striped volume on three specific disks (disk03, disk04, and disk05), enter:
+vxassist make agni 4000m layout=stripe disk03 disk04 disk05
+
+
+Now create a file systems in it and mount and change /etc/fstab (HP-UX) or /etc/vfstab (Soaris)
+
+newfs -F vxfs -o largefiles /dev/vx/rdsk/agni
+mkdir /agni
+mount /dev/vx/dsk/agni /agni
+
+To move a disk between disk groups, remove the disk from one disk group and add it to the other. For example, to move the physical disk c0t3d0 (attached with the disk name disk04) from disk group rootdg
+and add it to disk group mktdg, use the following commands:
+vxdg rmdisk disk04
+vxdg -g mktdg adddisk mktdg02=c0t3d0
+
+To remove disk02 from rootdg, use the following command:
+vxdg rmdisk disk02
+If the disk has subdisks on it when you try to remove it, you will get an error message.
+
+To remove disk02 from rootdg with chance of data loss, use the following command:
+vxdg rmdisk disk02 -k
+
+
+To remove it from Volume Manager control completely, as follows:
+vxdisk rm devicename
+(Ex. vxdisk rm c1t0d0)
+
+ 
+
+Monitoring Free Space in VXFS
+
+
+Extent fragmentation should be monitored with fsadm_vxfs(1M) or the -o s options of df_vxfs(1M).
+There are three factors which can be used to determine the degree of fragmentation:
+• percentage of free space in extents of less than eight blocks in length
+• percentage of free space in extents of less than 64 blocks in length
+• percentage of free space in extents of length 64 blocks or greater
+An unfragmented file system will have the following characteristics:
+• less than 1 percent of free space in extents of less than eight blocks in length
+• less than 5 percent of free space in extents of less than 64 blocks in length
+• more than 5 percent of the total file system size available as free extents in lengths of 64 or more blocks
+A badly fragmented file system will have one or more of the following characteristics:
+• greater than 5 percent of free space in extents of less than 8 blocks in length
+• more than 50 percent of free space in extents of less than 64 blocks in length
+• less than 5 percent of the total file system size available as free extents in lengths of 64 or more blocks
+The optimal period for scheduling of extent reorganization runs can be determined by choosing a
+reasonable interval, scheduling fsadm runs at the initial interval, and running the extent fragmentation
+report feature of fsadm before and after the reorganization.
+The “before” result is the degree of fragmentation prior to the reorganization. If the degree of
+fragmentation is approaching the figures for bad fragmentation, then the interval between fsadm runs
+should be reduced. If the degree of fragmentation is low, the interval between fsadm runs can be
+increased.
+The “after” result is an indication of how well the reorganizer is performing. The degree of fragmentation
+should be close to the characteristics of an unfragmented file system. The file system may be a candidate
+for expansion. (Full file systems tend to fragment and are difficult to defragment.) It is also possible that
+the reorganization is not being performed at a time during which the file system in question is relatively
+idle. Directory reorganization is not nearly as critical as extent reorganization, but regular directory
+reorganization will improve performance. It is advisable to schedule directory reorganization for file
+systems when the extent reorganization is scheduled. The following is a sample script that is run
+periodically at 3:00 A.M. from cron for a
+number of file systems:
+outfile=/tmp/fsadm_out.&212#;/bin/date +’%m%d’&212#;
+for i in /home /home2 /project /db
+do
+/bin/echo "Reorganizing $i"
+/bin/timex fsadm -F vxfs -e -E -s $i
+/bin/timex fsadm -F vxfs -s -d -D $i
+done > $outfile 2>
+
+ 
+
+How to Configure DNS
+
+
+Create Primary DNS Server
+1. Get your IP numbers for Primary and Secondary DNS first.
+2. Create a list of host names and correspondence IP addresses in /etc/hosts file
+3. #mkdir /etc/named.data
+4. #cd /etc/named.data
+5. Create a file named param that will be used by hosts_to_named to create DNS data files
+Ex. -d boota.com
+-n 192.168.3
+-z 192.168.3.10
+-b /etc/named.boot
+-s
+(-d = domain name, -n = network number, -z = configuration file for secondary server and IP no. of
+primary server to download data files, -b for boot files used by named process, -s adds a name server
+(NS) resource record in configuration file.
+6. #hosts_to_named –f param
+7. download the db.cache file from internet copy it to /etc/named.data directory
+8. modify /etc/rc.config.d/namesvrs file (NAMED=1) to start named process automatically with m/c
+boots
+9. /sbin/init.d/named start
+Create Secondary DNS Server
+1. #mkdir /etc/named.data
+2. copy boot.sec file as /etc/named.boot from the primary server if you don’t have much disk space.
+or
+copy boot.sec.save file as /etc/named.boot if you have much space to keep database file.
+3. copy db.127.0.0 from the primary server to /etc/named.data directory
+4. copy db.cache from the primary server to the /etc/named.data directory
+5. if you want to create local database files download the remaining files from /etc/named.data from
+primary server to local /etc/named.data directory.
+6. update the /etc/rc.config.d/namesvrs file to start named at boot time.
+7. start named using /sbin/init.d/named start
+Create Caching DNS Server
+1. #mkdir /etc/named.data
+2. copy named.cacheonly from primary sever as /etc/named.boot
+3. copy db.127.0.0 from primary server to /etc/named.data directory
+4. copy db.cache from primary server to /etc/named.data directory
+5. update the /etc/rc.config.d/namesvrs file to start named at boot time
+6. start named /sbin/init.d/named start command
+Configuring DNS client
+1. edit /etc/nssswitch.conf file & enter
+hosts: dns files
+2. edit /etc/resolve.conf and enter the name servers
+Ex. search xyz.com
+nameserver 192.168.3.10
+nameserver 192.168.3.12
+Updating Database files on Primary Server
+1. edit and update /etc/hosts file on primary server
+2. # cd /etc/named.data
+3. run to regenerate database files
+4. # hosts_to_named -f param
+5. reload using “sig_named restart” command
+
+ 
+
+How to determine the SCSI queue depth for a device in HP-UX
+
+scsictl -m queue_depth /dev/rdsk/cxtxdx
+
+ 
+
+How to change the SCSI queue depth for a device in HP-UX
+
+scsictl -m queue_depth=X /dev/rdsk/cxtxdx
+
+ 
+
+How to Mirror VG00 using LVM with HPUX-11.23IA
+HP Document ID : KBRC00014526
+NOTE: There are differences in procedure between 11.22 and 11.23.
+Please refer to KBRC00011156 for B.11.22.
+1. From HPUX, use vgdisplay to identify the disk that is in vg00. Use
+ioscan to find the spare disk.
+# vgdisplay -v --> vg00 is on /dev/dsk/c2t1d0s2 in this example
+# ioscan -efunC disk --> Let's assume c3t2d0 for this example
+2. Create the system, OS, and service partitions.
+# vi /tmp/partitionfile
+3
+EFI 500MB
+HPUX 100%
+HPSP 400MB
+# idisk -wf /tmp/partitionfile /dev/rdsk/c3t2d0
+idisk version: 1.31
+********************** WARNING ***********************
+If you continue you may destroy all data on this disk.
+Do you wish to continue(yes/no)? yes <-- Answer "yes" and not "y"
+3. Create device files needed for the new partitions.
+# insf -eC disk
+4. Verify the partition table.
+# idisk /dev/rdsk/c3t2d0
+5. Verify that the device files were created properly.
+# ioscan -efnC disk --> c3t2d0 is 0/1/1/1.2.0
+6. Populate the /efi/hpux/ directory in the new EFI system partition.
+# mkboot -e -l /dev/rdsk/c3t2d0
+7. Change the auto file for the mirror to boot without quorum.
+NOTE: Using "s1"
+# echo "boot vmunix -lq" > /tmp/AUTO.lq
+# efi_cp -d /dev/rdsk/c3t2d0s1 /tmp/AUTO.lq /EFI/HPUX/AUTO
+NOTE: We assume that if we boot from the primary, the mirror is fully
+functional and therefore we don't need to override quorum. Your site
+might require that both disks override quorum.
+9. Verify the contents of the auto file on the primary and the mirror.
+NOTE: Using "s1"
+# efi_cp -d /dev/rdsk/c2t1d0s1 -u /EFI/HPUX/AUTO /tmp/AUTO.pri
+# efi_cp -d /dev/rdsk/c3t2d0s1 -u /EFI/HPUX/AUTO /tmp/AUTO.alt
+# cat /tmp/AUTO.pri
+# cat /tmp/AUTO.alt
+10. Add the new partition to vg00.
+NOTE: Using "s2"
+# pvcreate -fB /dev/rdsk/c3t2d0s2
+# vgextend vg00 /dev/dsk/c3t2d0s2
+11. Mirror all logical volumes in vg00.
+NOTE: Using "s2"
+# lvextend -m 1 /dev/vg00/lvol1 /dev/dsk/c3t2d0s2
+# lvextend -m 1 /dev/vg00/lvol2 /dev/dsk/c3t2d0s2
+# lvextend -m 1 /dev/vg00/lvol3 /dev/dsk/c3t2d0s2
+.
+.
+.
+# lvextend -m 1 /dev/vg00/lvol8 /dev/dsk/c3t2d0s2
+12. Add the new disk to /stand/bootconf.
+NOTE: Using "s2"
+# vi /stand/bootconf
+l /dev/dsk/c2t1d0s2
+l /dev/dsk/c3t2d0s2
+13. Verify that the new disk was added to vg00, and the lv's are in
+sync.
+# vgdisplay -v vg00
+14. Verify that the BDRA was updated properly. Take note of the HW
+paths forstep 15.
+# lvlnboot -v
+15. Add EFI primary and high availability boot path menu entries.
+# setboot -p 0/1/1/0.1.0 <-- Set primary disk
+# setboot -h 0/1/1/1.2.0 <-- Set mirror disk
+# setboot -b on <-- Set autoboot on
+16. Verify that the primary and mirror boot paths are configured
+properly.
+# setboot
+17. Test the new mirror by booting off of it.
+# shutdown -r -y 0
+18. Select "HP-UX HA Alternate Boot" to test the mirror.
+EFI Boot Manager ver 1.10 [14.61] Firmware ver 2.21 [4334]
+Please select a boot option
+HP-UX Primary Boot: 0/1/1/0.1.0
+HP-UX HA Alternate Boot: 0/1/1/1.2.0
+EFI Shell [Built-in]
+20. Verify which disk/kernel you booted from.
+# grep "Boot device" /var/adm/syslog/syslog.log
+vmunix: Boot device's HP-UX HW path is: 0.1.1.1.2.0
+21. Remove temporary files.
+# rm /tmp/partitionfile /tmp/AUTO*
+Done.
+Date 0/31/04
+
+
+ 
+
+INQ displaying devices as ACCESS DENIED (from EMC)
+
+Use rmsf command to remove the entries (Cause:  Migrated from old Symmetrix to a new Symmetrix)
+
+ 
+
+Host cannot see more than 8 luns per port ( From EMC)
+
+For HP-UX hosts with HDS 9960 or HP XP512 arrays: Set the host mode to 03, not 08, as the HDS documentation specifies. Setting the host mode to 03 enables the host to see more than 8 LUNs per port.
+
+ 
+
+How to change the SCSI queue depth for a device in HP-UX
+
+scsictl -m queue_depth=X /dev/rdsk/cxtxdx
+
+ 
+
+How to test if PowerPath is load balancing and configured properly to failover (emc87060)
+The following procedure can be used to make sure that PowerPath is configured properly for load balancing and failover. This example was done on an HP-UX machine, but it will work (with modifications for the device names) on any Unix host:
+
+Pick a Symmetrix device and note all of the native paths configured for that device:
+
+# powermt display dev=c24t0d1
+Symmetrix ID=000187400662
+Logical device ID=0011
+state=alive; policy=SymmOpt; priority=0; queued-IOs=0
+================================================
+---------------- Host --------------- - Stor - -- I/O Path - -- Stats ---
+### HW Path I/O Paths Interf. Mode State Q-IOs Errors
+================================================
+24 0/10/0/0.97.32.19.0.0.1 c24t0d1 FA 13aA active alive 0 0
+35 0/12/0/0.97.32.19.0.0.1 c35t0d1 FA 13aA active alive 0 0
+37 0/10/0/0.97.29.19.0.0.1 c37t0d1 FA 4bA active alive 0 0
+38 0/12/0/0.97.29.19.0.0.1 c38t0d1 FA 4bA active alive 0 0
+
+Set the policy to Round Robin for that device:
+
+# powermt set policy=rr dev=c24t0d1
+# powermt display dev=c24t0d1 | grep policy
+state=alive; policy=RoundRobin; priority=0; queued-IOs=0
+
+Start I/O to a single device in the group (in this case, use the block device as the input file and /dev/null as the output file to read from the device):
+
+# dd if=/dev/dsk/c24t0d1 of=/dev/null
+
+Show I/O on all of the paths to that device:
+
+# sar -d 10
+HP-UX curly B.11.11 U 9000/800 05/18/04
+15:54:21 device %busy avque r+w/s blks/s avwait avserv
+15:54:31 c1t2d0 0.50 0.50 3 44 4.30 1.54
+c24t0d1 6.79 0.50 336 2688 5.04 0.24
+c35t0d1 8.08 0.50 336 2688 5.04 0.21
+c37t0d1 6.79 0.50 336 2688 5.03 0.25
+c38t0d1 7.68 0.50 336 2689 5.05 0.21
+
+There is I/O down all four paths to Symmetrix device 0011.
+
+Note: In the above example, there is only I/O down the four paths to device 0011 and to the internal disk (c1t2d0). If there is I/O to many devices on the system (almost certain in a production environment), egrep can be used to display only the paths to the Symm device in question:
+
+# sar -d 10 | egrep "c24t0d1|c35t0d1|c37t0d1|c38t0d1"
+16:00:56 c24t0d1 8.90 0.50 366 2929 5.06 0.20
+c35t0d1 6.70 0.50 366 2929 5.02 0.20
+c37t0d1 6.70 0.50 366 2929 4.99 0.21
+ 
+
+How to interpret HP-UX device numbers from SCSI read and write errors in the syslog - emc88252
+When SCSI read and write errors are logged in the syslog, the device number is written in hex. For example:
+Jun 2 21:13:38 pdb01 vmunix: SCSI: Read error -- dev: b 31 0x2b8400, errno: 126, resid: 8192,
+Jun 2 21:13:39 pdb01 above message repeats 13 times
+Jun 2 21:13:39 pdb01 vmunix: - dev: b 31 0x2b8400, errno: 126, resid: 8192,
+Jun 2 21:13:39 pdb01 vmunix: blkno: 2895352, sectno: 5790704, offset: -1330126848, bcount: 8192.
+Jun 2 21:13:52 pdb01 vmunix: SCSI: Write error -- dev: b 31 0x038400, errno: 126, resid: 8192,
+Jun 2 21:13:52 pdb01 vmunix: blkno: 5454416, sectno: 10908832, offset: 1290354688, bcount: 8192.
+The numbers can be broken down as follows:
+vmunix: SCSI: Write error -- dev: b 31 0x2b8400
+2b = Controller 43
+8 = Target 8
+4 = LUN 4
+This translates to c43t8d4
+vmunix: SCSI: Read error -- dev: b 31 0x038400
+03= Controller 3
+8 = Target 8
+4 = LUN 4
+This translates to c3t8d4
+
+ 
+
+There is another very easy way to find it : (my note). SCSI write error is most probably either disk or tape. In this case major no is 31 which is always for disk in hp-ux. So run ll /dev/dsk and grep for the entry 0x038400 and you will know right away which is the device.
+
+ 
+
+There are 2 paths to the same Symmetrix device (091) that is logging the read and write errors:
+/dev/rdsk/c3t8d4 :EMC :SYMMETRIX :5568 :32091000 :8838720
+/dev/rdsk/c43t8d4 :EMC :SYMMETRIX :5568 :32091000 :8838720
+In most cases when this type of error is seen against Symm devices, the issue is logical corruption and running
+fsck on the affected logical volumes or devices will solve the problem.
+
+ 
+
+VXFS Related FAQS
+
+To increase or decrease space in file system. First extend the LVM
+# lvextend -L 72 /dev/vg01/lvol1
+# fsadm -b new_size mount_point (here 72*1024,assuming 1K block size )
+Report on directory fragmentation.
+# fsadm –D mount_point
+Reorganize directories to reduce fragmentation and reclaim wasted space.
+# fsadm –d mount_point
+Report on extent fragmentation within a file system.
+# fsadm –E mount_point
+Reorganize (defragment) a file system's extents to reduce fragmentation and reclaim wasted space.
+# fsadm –e mount_point
+Create a snapshot file system. First create separate LVM for that purpose
+lcreate –L 20 /dev/vg02/snap_back
+mkdir /backhome
+# mount –o snapof=primary_special special mount_point
+# mount –o snapof=/dev/vg02/lvdata /dev/vg02/snap_back /backhome
+Change extent attributes. To maximize performance.
+# setext –e extent_size –r reservation -f flags file
+
+ 
+
+How to export and import a Volume Group
+
+ 
+
+From the source Server do the these steps
+unmount the filesystem(s) of the VG you want to export
+umount /test (Ex. /test is the mount point)
+vgchange -a n vg-test
+vgexport -p -m vg-test.map vgtest (To preview and create the mapfile. To export omit -p)
+on the New Server
+ioscan –fnC disk (To find new disk entries)
+insf –d sdisk (To install the disk device files)
+ll /dev/*/group (To see what minor numbers have already been used)
+mkdir /dev/vg-test (To create the directory)
+mknod /dev/vgx/group c 64 0x00000 (To create the device file)
+vgimport -m /dev/dsk/cxtxdx /dev/dsk/cxtxdx (To import the volume group)
+vgchange -a y (to activate the volume group)
+mkdir /test
+and mount /dev/vg-test/lvxx /test
+
+ 
+
+Test ftp data transfer rate without actual transfererring
+
+
+ftp targethost
+username/passwd...
+bin
+hash
+put "|dd if=/dev/zero bs=32k count=1000" /dev/null
+
+ 
+
+How to convert numbers to and from binary format.
+
+ 
+
+To make the conversion of value 195 to binary format, enter:
+bc
+obase=2
+1000
+
+1111101000
+To convert the binary number 1111101000 to a decimal format, enter:
+bc
+ibase=2
+1111101000
+1000
+
+ 
+
+How to mount a ISO image
+
+ 
+
+nohup pfs_mountd &
+nohup pfsd &
+pfs_mount -o xlat=UNIX pathToIso mountPoint
+or
+usr/sbin/pfs_mount -t iso9660 -x unix /images/cd.iso /mnt
+
+   
+
+Problem              : Unable to recover rx2620 server to rx7620
+
+possible (tested) solution : - Boot from the recovery tape. Note down each file systems size and delete them and re-create them from the Ignite Menu.
+
+I  successfully recoverd on of my clients's server using this method. I don't know anyone else ever tested it or not.
+
+ 
+
+How to use  linkloop command
+
+Suppose you want to troubleshoot network problem and you have the mac address of the remote server running hp-ux. From your current server u want to check the connectivity using lan0. From ioscan -funClan you got the instance no. which is 0 and MAC of the remote ethernet card is 0x00306EF3FDBD. the syntax will be:
+
+linkloop -vi 0 0x00306EF3FDBD
+
+ 
+
+If swinstall, swlist or SAM takes very long time to come back
+
+Check /etc/hosts file and match the hostname with proper IP address. Then check  /etc/resolv.conf file and check the correct entries and see if you can ping the dns server or not. For instant solution you may rename it and then run swagentd -r command. Once you are done u can move that file back and rerun swagentd -r again.
+
+ 
+
+To check any Tape Library and Optical Jukebox
+
+# ioscan –funCautoch ( And note down the device name with path)
+Ex. /dev/rac/cxtxdx
+
+# mc –p /dev/rac/cxtxdx –r IDSM ( Will show all the slot and Drive information)
+# mc –p /dev/rac/cxtxdx –e IDSM ( Will show less detailed information)
+
+To find the tapes in the slots
+#mc –p /dev/rac/cxtxdx –r IDSM |grep –i full
+
+To move Tape from a Storage slot 5 to drive 1
+
+# mc –p /dev/rac/cxtxdx –s S5 –d D1 ( -s = Source, -d = destination)
+
+( S= Storage Slot, D=Drives, E=Export/Import Slot, M=Media changer i.e robot)
+
+ 
+
+Here is console display  from a Superdome GSP
+
+(To get the GSP/MP from console press CTRL+B
+Default user and pwd for all newer boxes starting from RP7410 is Admin/Admin)
+
+GSP login:Admin
+GSP password:
+
+(c)Copyright 2000 Hewlett-Packard Co., All Rights Reserved.
+
+
+Welcome to
+
+Superdome's Guardian Service Processor
+
+
+
+GSP MAIN MENU:
+
+Utility Subsystem FW Revision Level: 7.34
+
+CO: Consoles
+VFP: Virtual Front Panel
+CM: Command Menu
+CL: Console Logs
+SL: Show chassis Logs
+HE: Help
+X: Exit Connection
+GSP> co
+
+Partitions available:
+
+# Name
+--- ----
+0) Npar0
+1) Npar1
+Q) Quit
+
+Please select partition number: 0
+
+Connecting to Console: Npar0
+
+(Use ^B to return to main menu.)
+
+[A few lines of context from the console log:]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+GenericSysName [HP Release B.11.11] (see /etc/issue)
+Console Login:
+
+How to display all informations of all the nPars
+
+parstatus
+
+ 
+
+How to display properties of nPar0 only
+
+parstatus -V -p0
+
+ 
+
+Example of a parcreate command to create a partition name shreya with Cell2 and cell3 (Remember at least one Cell must have core io attached to it i.e should have IO Drawers)
+
+parcreate -P shreya -c 2:base:y:ri -c 3:base:y:ri
+
+ 
+
+Here is the output of parstatus command without any switch
+
+(I am not explaining as man page has all the informations, but this screenshot will help people who are new to nPar world)
+
+root@SDPROD0> parstatus
+Warning: No action specified. Default behaviour is display all.
+[Complex]
+Complex Name : GOD
+Complex Capacity
+Compute Cabinet (8 cell capable) : 1
+Active GSP Location : cabinet 0
+Model : 9000/800/SD32000
+Serial Number : USE12345678
+Current Product Number : A5201A
+Original Product Number : A5201A
+Complex Profile Revision : 1.0
+The total number of Partitions Present : 2
+
+[Cabinet]
+                                Cabinet      I/O              Bulk Power    Backplane
+                                Blowers      Fans            Supplies       Power Boards
+                                OK/            OK/             OK/               OK/
+Cab                          Failed/       Failed/        Failed/          Failed/
+Num Cabinet Type   N Status     N Status      N Status        N Status            GSP
+=== ============ ========= ========= ========== ============ ======
+0    SD32000           4/ 0/ N+       5/ 0/ ?        6/ 0/ N+         3/ 0/ N+             active
+
+Notes: N+ = There are one or more spare items (fans/power supplies).
+N = The number of items meets but does not exceed the need.
+N- = There are insufficient items to meet the need.
+? = The adequacy of the cooling system/power supplies is unknown.
+
+[Cell]
+                                              CPU         Memory                                                             Use
+                                              OK/          (GB)                                                    Core        On
+Hardware      Actual               Deconf/    OK/                                                     Cell         Next   Par
+Location       Usage                Max         Deconf        Connected To                 Capable  Boot   Num
+========== ============ ======= ========= =================== ======= ====    ===
+cab0,cell0     active core       4/0/4       16.0/ 0.0      cab0,bay1,chassis3           yes           yes      1
+cab0,cell1     active base      4/0/4        12.0/ 0.0     cab0,bay0,chassis3           yes          yes       1
+cab0,cell2     inactive           4/0/4         8.0/ 0.0       -                                       no            -           -
+cab0,cell3     inactive           4/0/4        12.0/ 0.0      -                                       no            -           -
+cab0,cell4     active core      4/0/4         12.0/ 0.0      cab0,bay0,chassis1          yes          yes       0
+cab0,cell5     active base      4/0/4        12.0/ 0.0      -                                       no           yes       0
+cab0,cell6     active base      4/0/4        12.0/ 0.0      cab0,bay1,chassis1          yes          yes       0
+cab0,cell7     inactive           4/0/4        12.0/ 0.0     -                                        no            -           -
+
+[Chassis]
+                                                                         Core  Connected     Par
+Hardware Location                   Usage               IO      To                 Num
+===================          ============ ==== ========== ===
+cab0,bay0,chassis0                  absent               -        -                    -
+cab0,bay0,chassis1                  active                yes    cab0,cell4     0
+cab0,bay0,chassis2                  absent               -        -                     -
+cab0,bay0,chassis3                  active                yes cab0,cell1        1
+cab0,bay1,chassis0                  absent               -        -                    -
+cab0,bay1,chassis1                  active                yes cab0,cell6        0
+cab0,bay1,chassis2                  absent               -       -                      -
+cab0,bay1,chassis3                  inactive             yes cab0,cell0        1
+
+[Partition]
+Par                            # of     # of I/O
+Num Status               Cells   Chassis      Core cell       Partition Name (first 30 chars)
+===  ============ ===== ======== ========== ===============================
+0      active                3        2                cab0,cell4     sdprod0
+1      active                2        1                cab0,cell0     sdoraprod1
+
+ 
+
+Here is the screenshot of HP-UX booting process. This Screen shot taken from a Superdome nPar but the BCH main screen is almost same for all HPPA Servers.
+
+ 
+
+Cells have been reset (Boot Is Blocked (BIB) is not set).
+
+Firmware Version 36.8
+
+Duplex Console IO Dependent Code (IODC) revision 2
+--------------------------------------------------------------------------
+(c) Copyright 1995-2002, Hewlett-Packard Company, All rights reserved
+--------------------------------------------------------------------------
+
+          Cab/   Cell        ------- Processor --------           Cache Size
+Cell    Slot    State          # Speed State                  Inst Data
+----      ----      ------------       ---   --------     -----------            ------   ------
+0        0/0      Active         0   875 MHz Active         768 KB 1.5 MB
+                                       1   875 MHz Idle             768 KB 1.5 MB
+                                       2   875 MHz Idle             768 KB 1.5 MB
+                                       3   875 MHz Idle             768 KB 1.5 MB
+1       0/1       Idle            0   875 MHz Idle             768 KB 1.5 MB
+                                       1   875 MHz Idle             768 KB 1.5 MB
+                                       2   875 MHz Idle             768 KB 1.5 MB
+                                       3   875 MHz Idle             768 KB 1.5 MB
+
+Primary Boot Path: 0/0/1/0/0.0
+         Boot Actions: Go to BCH.
+
+HA Alternate Boot Path: 0/0/0/0/0.0
+                 Boot Actions: Skip this path.
+Go to next path.
+
+Alternate Boot Path: 0/0/0/0/0.0
+           Boot Actions: Skip this path.
+Go to BCH.
+
+Console Path: 0/0/0/0/0.0
+
+Attempting to boot using the primary path.
+-------------------------------------------------------------
+
+The Boot Action for this path specifies that PDC stop at BCH.
+
+---- Main Menu ---------------------------------------------------------------
+
+Command                                                   Description
+-------                                                             -----------
+BOot [PRI|HAA|ALT|<path>]                       Boot from specified path
+PAth [PRI|HAA|ALT] [<path>]                     Display or modify a path
+SEArch [ALL||<cell|path>]                          Search for boot devices
+ScRoll [ON|OFF]                                         Display or change scrolling capability
+
+COnfiguration menu                                   Displays or sets boot values
+INformation menu                                       Displays hardware information
+SERvice menu                                            Displays service commands
+
+DIsplay                                                        Redisplay the current menu
+HElp [<menu|command>]                           Display help for menu or command
+REBOOT                                                     Restart Partition
+RECONFIGRESET                                      Reset to allow Reconfig Complex Profile
+----
+Main Menu: Enter command or menu >bo pri       ( or just bo will boot from the primary path)
+Primary Boot Path: 0/0/1/0/0.0
+
+
+Do you wish to stop at the ISL prompt prior to booting? (y/n) >>n     
+
+(Select y to boot single user mode for lvm maintenance, override quorum, changing
+
+root password etc. I wil cover those later otherwise press n to boot normally.
+Here is the output if you press y ,  I deleted blank lines to save some space)
+
+Initializing boot Device.
+Boot IO Dependent Code (IODC) Revision 4
+Boot Path Initialized.
+HARD Booted.
+ISL Revision A.00.43 Apr 12, 2000
+ISL>
+If you type help and enter you will see the following list or something similar
+
+ISL> help
+
+HELP                         Help Facility
+LS                              List ISL utilities
+AUTOBOOT              Set or clear autoboot flag in stable storage
+AUTOSEARCH          Set or clear autosearch flag in stable storage
+PRIMPATH                Modify primary boot path in stable storage
+ALTPATH                  Modify alternate boot path in stable storage
+CONSPATH               Modify system console path in stable storage
+DISPLAY                   Display boot and console paths in stable storage
+LSAUTOFL                List contents of autoboot file
+FASTSIZE                 Sets or displays FASTSIZE
+800SUPPORT           Boots the s800 Support Kernel from the boot device
+700SUPPORT           Boot the s700 Support Kernel from the boot device
+READNVM                 Displays contents of one word of NVM
+READSS                    Displays contents of one word of stable storage
+LSBATCH                  List contents of batch file
+BATCH                      Execute commands in batch file
+LSEST                       List contents of EST (Extended Self Test) file
+EST                           Execute commands in EST (Extended Self Test) file
+EXIT                          Return to the Boot Console Handler
+
+Enter 'LS' to see a list of the ISL utilities.
+
+ISL>
+
+Lets see what LS shows us
+ISL> ls
+Utilities on this system are:
+filename type start size created
+=====================================================
+ODE -12960 584 880 03/10/15 11:53:05
+HPUX -12928 4568 848 02/05/10 16:25:44
+ISL>
+If you run di or display you will see
+
+ISL> di
+Autoboot is OFF (disabled)
+Autosearch is OFF (disabled)
+Primary boot path is 0/0/1/0/0.0.0.0.0.0.0
+Primary boot path is (hex) 0/0/1/0/0.0.0.0.0.0.0
+
+Alternate boot path is 0/0/0/0/0.0.0.0.0.0.0
+Alternate boot path is (hex) 0/0/0/0/0.0.0.0.0.0.0
+
+System console path is 0/0/0/0/0/0/0/0.0.0.0.0.0.0
+System console path is (hex) 0/0/0/0/0/0/0/0.0.0.0.0.0.0
+
+ISL>
+I am not going through all the details here but will cover later. Here is couple of syntaxes
+
+ISL>hpux -is       ----> To boot single user mode
+
+ISL>hpux  /stand/vmunix.old  ---> To boot from the old kernel called vmunix.old
+
+ISL>hpux -lq    ----->To override Quorum
+
+ISL>hpux -lm   ------->To boot LVM maintenance mode.
+
+We can type exit to go back to bch but it works only for newer servers including Superdome.
+
+In stead let us boot from here using defaults as if we didn't press any key at bch or used bo
+
+command from bch. Here is the complete boot process from Console. Take a close look
+
+at each lines and you will understand things better. Depending upon different configuration
+
+this screen will look slightly different but most of them are like this.
+
+ISL> hpux
+
+Boot
+: disk(0/0/1/0/0.0.0.0.0.0.0;0)/stand/vmunix
+10493952 + 2043904 + 4738040 start 0x1f2a68
+gate64: sysvec_vaddr = 0xc0002000 for 2 pages
+NOTICE: nfs3_link(): File system was registered at index 3.
+NOTICE: autofs_link(): File system was registered at index 6.
+NOTICE: cachefs_link(): File system was registered at index 7.
+0/0/4/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+0/0/6/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+td: claimed Tachyon XL2 Fibre Channel Mass Storage card at 0/0/8/0/0
+td: claimed Tachyon XL2 Fibre Channel Mass Storage card at 0/0/10/0/0
+0/0/12/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+0/0/14/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+td: claimed Tachyon XL2 Fibre Channel Mass Storage card at 1/0/2/0/0
+td: claimed Tachyon XL2 Fibre Channel Mass Storage card at 1/0/4/0/0
+1/0/12/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+1/0/14/0/0/4/0: Fibre channel host port is OFFLINE, can not scan
+
+
+System Console is on the Built-In Serial Interface
+igelan5: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 0/0/4/0/0/6/0
+igelan6: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 0/0/6/0/0/6/0
+igelan8: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 0/0/12/0/0/6/0
+igelan9: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 0/0/14/0/0/6/0
+igelan12: INITIALIZING HP A6825-60101 PCI 1000Base-T Adapter at hardware path 1/0/9/0/0
+igelan14: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 1/0/12/0/0/6/0
+igelan15: INITIALIZING HP A9782-60001 PCI/PCI-X 1000Base-SX FC/GigE Combo Adapter at hardware path 1/0/14/0/0/6/0
+igelan7: INITIALIZING HP A6825-60101 PCI 1000Base-T Adapter at hardware path 0/0/9/0/0
+igelan13: INITIALIZING HP A6825-60101 PCI 1000Base-T Adapter at hardware path 1/0/10/0/0
+Logical volume 64, 0x3 configured as ROOT
+Logical volume 64, 0x2 configured as SWAP
+Logical volume 64, 0x2 configured as DUMP
+Swap device table: (start & size given in 512-byte blocks)
+entry 0 - major is 64, minor is 0x2; start = 0, size = 8388608
+Starting the STREAMS daemons-phase 1
+Checking root file system.
+file system is clean - log replay is not required
+Root check done.
+Create STCP device files
+Starting the STREAMS daemons-phase 2
+$Revision: vmunix: vw: -proj selectors: CUPI80_BL2000_1108 -c 'Vw for CUPI80_BL2000_1108 build' -- cupi80_bl2000_1108 'CUPI80_BL2000_1108' Wed Nov 8 19:24:56 PST 2000 $
+Memory Information:
+physical page size = 4096 bytes, logical page size = 4096 bytes
+Physical: 29163520 Kbytes, lockable: 27325164 Kbytes, available: 27280588 Kbytes
+
+/sbin/ioinitrc:
+/sbin/krs_sysinit:
+
+
+/sbin/bcheckrc:
+Checking for LVM volume groups and Activating (if any exist)
+Volume group "/dev/vg00" has been successfully changed.
+Resynchronized volume group /dev/vg00
+vxfs fsck: sanity check: root file system OK (mounted read/write)
+Checking hfs file systems
+/sbin/fsclean: /dev/vg00/lvol1 (mounted) ok
+HFS file systems are OK, not running fsck
+Checking vxfs file systems
+/dev/vg00/lvol8 :
+vxfs fsck: sanity check: /dev/vg00/lvol8 OK
+/dev/vg00/lvol3 :
+vxfs fsck: sanity check: root file system OK (mounted read/write)
+/dev/vg00/lvol4 :
+vxfs fsck: sanity check: /dev/vg00/lvol4 OK
+/dev/vg00/lvol5 :
+vxfs fsck: sanity check: /dev/vg00/lvol5 OK
+/dev/vg00/lvol6 :
+vxfs fsck: sanity check: /dev/vg00/lvol6 OK
+/dev/vg00/lvol7 :
+vxfs fsck: sanity check: /dev/vg00/lvol7 OK
+
+Cleaning /etc/ptmp...
+(c)Copyright 1983-2000 Hewlett-Packard Co., All Rights Reserved.
+(c)Copyright 1979, 1980, 1983, 1985-1993 The Regents of the Univ. of California
+(c)Copyright 1980, 1984, 1986 Novell, Inc.
+(c)Copyright 1986-1992 Sun Microsystems, Inc.
+(c)Copyright 1985, 1986, 1988 Massachusetts Institute of Technology
+(c)Copyright 1989-1993 The Open Software Foundation, Inc.
+(c)Copyright 1986 Digital Equipment Corp.
+(c)Copyright 1990 Motorola, Inc.
+(c)Copyright 1990, 1991, 1992 Cornell University
+(c)Copyright 1989-1991 The University of Maryland
+(c)Copyright 1988 Carnegie Mellon University
+(c)Copyright 1991-2000 Mentat Inc.
+(c)Copyright 1996 Morning Star Technologies, Inc.
+(c)Copyright 1996 Progressive Systems, Inc.
+(c)Copyright 1991-2000 Isogon Corporation, All Rights Reserved.
+
+
+RESTRICTED RIGHTS LEGEND
+Use, duplication, or disclosure by the U.S. Government is subject to
+restrictions as set forth in sub-paragraph (c)(1)(ii) of the Rights in
+Technical Data and Computer Software clause in DFARS 252.227-7013.
+
+Hewlett-Packard Company
+3000 Hanover Street
+Palo Alto, CA 94304 U.S.A.
+
+Rights for non-DOD U.S. Government Departments and Agencies are as set
+forth in FAR 52.227-19(c)(1,2).
+
+/sbin/auto_parms: DHCP access is disabled (see /etc/auto_parms.log)
+
+
+HP-UX Start-up in progress
+__________________________
+
+Configure system crash dumps ................................................ OK
+VxVM device node check ...................................................... OK
+VxVM general startup ........................................................ OK
+VxVM reconfiguration recovery ............................................... OK
+Mount file systems .......................................................... OK
+Update kernel and loadable modules .......................................... N/A
+Initialize loadable modules ................................................. OK
+Setting hostname ............................................................ OK
+Start Kernel Logging facility ............................................... N/A
+Set privilege group ......................................................... N/A
+Display date ................................................................ N/A
+Copy processor logs to /var/tombstones ...................................... OK
+Save system crash dump if needed ............................................ N/A
+Enable auxiliary swap space ................................................. OK
+Start syncer daemon ......................................................... OK
+Configure Loopback interfaces (lo0) ......................................... OK
+VxVM volume recovery start .................................................. OK
+Configuring all unconfigured software filesets ............................ OK
+Recover editor crash files .................................................. OK
+Clean UUCP .................................................................. OK
+List and/or clear temporary files ........................................... OK
+Clean up old log files ...................................................... OK
+Start system message logging daemon ......................................... OK
+Start pty allocator daemon .................................................. OK
+Configuring OLA/R interface ................................................. OK
+Start network tracing and logging daemon ................................... OK
+Configure HP igelan Gigabit Ethernet interfaces .......................... OK
+Configure HP iether Gigabit Ethernet interfaces ........................... OK
+Configure HP Gigabit Ethernet interfaces .................................... OK
+Configure HP Ethernet interfaces ............................................ OK
+Create PCI FDDI device files. ............................................... OK
+Configure HP 100BASE-T interfaces ........................................... OK
+Configure VLAN interfaces ................................................... OK
+Configure LAN interfaces .................................................... OK
+Start name server daemon .................................................... N/A
+Starting HP-UX Secure Shell ................................................. OK
+Start NFS core subsystem .................................................... OK
+Start NIS+ server subsystem ................................................. OK
+Start NIS+ client subsystem ................................................. OK
+Start NIS server subsystem .................................................. OK
+Start NIS client subsystem .................................................. OK
+Start NFS client subsystem .................................................. OK
+Start the Trusted Mode with NIS+ subsystem .............................. N/A
+Configure pseudo devices for MAC/LLA access ......................... OK
+Start multicast routing daemon .............................................. N/A
+Start Internet services daemon .............................................. OK
+Start dynamic routing daemon ................................................ N/A
+Start router discover protocol daemon ....................................... N/A
+Configuring PPP Interface ................................................... OK
+Start RARP protocol daemon .................................................. N/A
+Start remote system status daemon ........................................... N/A
+Configuring man pages for Internet Services ............................... OK
+Starting mail daemon ........................................................ OK
+Starting outbound connection daemons for DDFA software ...................... N/A
+Start SNMP Master Network Management daemon ................................. OK
+Start OSPF MIB Network Management subAgent .................................. N/A
+Start SNMP HP-UNIX Network Management subAgent .............................. OK
+Start SNMP MIB-2 Network Management subAgent ................................ OK
+Start SNMP Trap Dest Network Management subAgent ............................ OK
+Start DCE daemons ........................................................... N/A
+Start SNMP PCI FDDI Network Management subAgent ............................. OK
+Start RPC daemon if needed .................................................. OK
+Start Isogon License Server Daemon .......................................... N/A
+Start remote boot daemon .................................................... N/A
+Starting X Font Server at TCP port 7000 ..................................... N/A
+Start vt daemon ............................................................. OK
+Starting UDC server ......................................................... N/A
+Start time synchronization .................................................. N/A
+Start accounting ............................................................ N/A
+Install/Load XF86 DLKM Helper Modules ....................................... OK
+Starting the password/group assist subsystem ................................ OK
+Starting HP Disk Array Manager daemons. ..................................... OK
+Starting disk array monitor daemons. ........................................ OK
+Start print spooler ......................................................... N/A
+Starting HP Distributed Print Service ....................................... OK
+Start clock daemon .......................................................... OK
+Start diagnostic subsystem .................................................. OK
+Start environment monitoring daemon ......................................... OK
+Start auditing subsystem .................................................... N/A
+Start audio server daemon ................................................... N/A
+Start Distributed Single Logical Screen daemon .............................. N/A
+Start USB hub daemon ........................................................ OK
+SAM System administration configuration ..................................... OK
+MeasureWare performance software is being started. .......................... OK
+Configure PRM -or- Configure and Enable PRM ................................. N/A
+Starting ObAM Application Server ............................................ N/A
+Initialize Software Distributor agent daemon ................................ OK
+Starting servicecontrol manager daemons ..................................... OK
+Starting CIFS Client ........................................................ N/A
+Starting Event Monitoring Service ........................................... OK
+Start EMS SNMP subagent ..................................................... OK
+Configure HP Fibre Channel Mass Storage interfaces .......................... OK
+Configuring Ultra320 SCSI Mass Storage interfaces ........................... N/A
+Starting SAMBA Server ....................................................... N/A
+Configure HP Fibre Channel Tachyon TL/TS Mass Storage interfaces ............ OK
+Configure HP Dual Port 2Gbps/1Gbps Fibre Channel Universal PCI-X Adapter .... OK
+VVR - Starting Communication Daemon ......................................... N/A
+VVR - Starting VRAS daemon .................................................. N/A
+VVR - Starting VxRSync daemon ............................................... N/A
+Starting VERITAS Enterprise Administrator Service (vxsvc) ................... OK
+Start NFS server subsystem .................................................. OK
+Starting HP-UX Host IDS Agent ............................................... N/A
+Start X print server(s) ..................................................... N/A
+Start CDE login server ...................................................... OK
+
+The system is ready.
