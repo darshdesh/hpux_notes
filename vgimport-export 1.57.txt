@@ -1,0 +1,53 @@
+VGimport & VGExport actvities 
+
+BC configuration of SR7 to MIG02 has been completed. MIG02 LUN details attached with the mail and new horcm instance details given below.
+SR7 to MIG02 BC:
+Horcm instance file name = horcm17.conf
+Horcm instance number = 17
+Kindly mount all file systems corresponding to VGs vtsdata, vtsdata1, vtsarch, vtsredo01, vtsredo02 and vtsredo03 on MIG02 and handover to oracle team.
+
+
+Find the LUN info on mig02 by using #xpinfo -i command and capture the output in file.
+
+sr7_pr#cd /tmp/map
+sr7_pr#ll
+total 96
+-rw-r--r--   1 root       sys             31 Mar 19 15:17 vtsarch.map
+-rw-r--r--   1 root       sys             50 Mar 19 15:14 vtsdata.map
+-rw-r--r--   1 root       sys             43 Mar 19 15:15 vtsdata1.map
+-rw-r--r--   1 root       sys             45 Mar 19 15:16 vtsredo01.map
+-rw-r--r--   1 root       sys             45 Mar 19 15:16 vtsredo02.map
+-rw-r--r--   1 root       sys             45 Mar 19 15:17 vtsredo03.map
+
+sr7_pr#ll /dev/*/group
+crw-r-----   1 root       sys         64 0x000000 Feb 20  2007 /dev/vg00/group
+crw-rw-rw-   1 root       sys         64 0x020000 Aug  7  2007 /dev/vtsarch/group
+crw-rw-rw-   1 root       sys         64 0x010000 Aug  7  2007 /dev/vtsdata/group
+crw-rw-rw-   1 root       sys         64 0x060000 Jun 25  2008 /dev/vtsdata1/group
+crw-rw-rw-   1 root       sys         64 0x030000 Aug  7  2007 /dev/vtsredo01/group
+crw-rw-rw-   1 root       sys         64 0x040000 Aug  7  2007 /dev/vtsredo02/group
+crw-rw-rw-   1 root       sys         64 0x050000 Aug  7  2007 /dev/vtsredo03/group
+
+sr7_pr#vgexport -p -v -s -m /tmp/map/vtsarch.map /dev/vtsarch
+sr7_pr#pairdisplay -fxc -g vtsarch
+sr7_pr#pairsplit -g vtsarch
+sr7_pr#paircreate -g vtsarch -vl
+sr7_pr#strings /etc/lvmtab
+sr7_pr#pairresync -g vtsredo03
+
+
+
+
+mig02#ll /dev/*/group
+mig02#mkdir   /dev/vtsarch 
+mig02#mknod /dev/vtsarch/group c 64 0x180000
+
+mig02#vgimport -p -v -s -m /tmp/map/datavg17.map datavg17       /dev/dsk/c5t15d0 Prieview run
+
+mig02#vgimport -v -s -m /home/hp_ravid/vtsdata1.map vtsdata1 /dev/dsk/c5t15d0 import VG
+mig02#vgchange -c n datavg17   Deactivate the VG
+mig02#vgchange -a y datavg17   Activate the VG 
+mig02#vgdisplay -v datavg17
+mig02#fsck -o full  /dev/vtsdata/lvdata1  create 1 mount point 
+
+Add this partition in /etc/fstab file 
