@@ -1,0 +1,99 @@
+# sudoers file.
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# See the sudoers man page for the details on how to write a sudoers file.
+#
+
+# Host alias specification
+
+# User alias specification
+
+# Cmnd alias specification
+Cmnd_Alias    A= /usr/sbin/cmviewcl, /usr/sbin/lvlnboot -v, /opt/OV/bin/OpC/opca
+gt, /usr/sbin/ioscan , /usr/sbin/swapinfo,/opt/perf/bin/ovpa,/usr/lbin/modprpw,/
+usr/lbin/getprpw
+Cmnd_Alias    B= /usr/bin/su - dbmgr,  /usr/bin/su - cdbmgr
+#Cmnd_Alias    C= /usr/bin/su - oracle, /usr/bin/su - orafindb
+#Cmnd_Alias    D= /usr/bin/su - csisora, /usr/bin/su - oracsidb
+Cmnd_Alias    C=  /usr/bin/su - orafindb
+Cmnd_Alias    D=  /usr/bin/su - oracsidb
+Cmnd_Alias    E= /usr/sbin/cmviewcl
+
+
+Cmnd_Alias  AP=/csisdbapp1/finser/scripts/menu , /usr/bin/su - finadm
+Cmnd_Alias    F=/usr/ccs/bin/pldd, /usr/ccs/bin/pstack
+# Defaults specification
+Defaults@cbsdb001      logfile=/var/adm/sudo.log
+
+# Runas alias specification
+
+# User privilege specification
+root    ALL=(ALL) ALL
+srikanth ALL=(ALL) ALL
+#kavuruka ALL=(ALL) ALL
+#nnag     ALL=(ALL) ALL
+unixl1   ALL= A ,B
+#gopala  ALL=(ALL) ALL
+ramaraju ALL=(ALL) ALL
+#prasad  ALL= A ,B
+kishore ALL=(ALL) ALL
+#srinivas  ALL= A ,B
+#sreerag ALL= A ,B
+#vikram  ALL=A ,B
+#ram     ALL=A ,B
+#lingam ALL=A ,B
+#manju  ALL=A ,B
+#jsamal ALL=A ,B
+#ashish ALL=A,B
+laggoni ALL=A
+ballesh ALL=A
+bharatg ALL=A
+mani ALL=A
+naveen ALL=(ALL) ALL
+kesava ALL=(ALL) ALL
+#rajakani ALL=A
+#srsekar ALL=A
+#jeeva ALL=A
+#mahesram ALL=A
+finser  ALL=AP
+vamsi ALL= A ,B
+#vjhp    ALL=B,F,E
+dbmgr   ALL=C
+cdbmgr  ALL=D
+#ksingh  ALL=B,D,C
+#santosh ALL=B
+#shinemic ALL=B
+#renju ALL=B
+#satish ALL=B
+nagaraju ALL=B
+#layadhar ALL=B
+kiran ALL=B
+siddarda ALL=B
+reddy ALL=B
+moulali ALL=B
+shivak ALL=B
+skrishna ALL=B
+#karthick ALL=B
+chinni ALL=B
+venkat ALL=B
+# Uncomment to allow people in group wheel to run all commands
+# %wheel        ALL=(ALL)       ALL
+srikanth        ALL=(ALL)       ALL
+kavuruka        ALL=(ALL)       ALL
+# Same thing without a password
+# %wheel        ALL=(ALL)       NOPASSWD: ALL
+kavuruka        ALL=(ALL)       NOPASSWD: ALL
+#nnag            ALL=(ALL)       NOPASSWD: ALL
+prasad          ALL=NOPASSWD:A,B
+kishore         ALL=NOPASSWD:A,B
+#vjhp            ALL=NOPASSWD:B,F,E
+dbmgr           ALL = NOPASSWD: C
+cdbmgr          ALL = NOPASSWD: D
+ksingh          ALL = NOPASSWD: B
+#oracle          ALL = NOPASSWD: E
+
+
+# Samples
+# %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom
+# %users  localhost=/sbin/shutdown -h now
