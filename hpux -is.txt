@@ -1,0 +1,51 @@
+The EFI shell is different.
+Typing 'hpux -is' at the 'Shell>' prompt won't boot to single user mode.
+
+You need to get into the hpux boot loader (which I called ISL) by either using the boot manager menu or by typing 'hpux' from the EFI prompt.
+
+It will say 'Press Any Key to interrup Autoboot'. Press a key.
+
+Then you can use 'hpux -is' or 'boot vmunix -is' at the 'HPUX>' prompt to boot into single user mode.
+
+
+
+
+
+
+Re: how to boot into single user mode in itanium/ia64
+Post Options
+?02-27-2004 04:44 AM
+
+Mike, the ISL prompt does not exist on Itanium machines.
+
+From the EFI prompt, use "hpux -is".
+
+
+
+
+
+
+
+
+After powering on the system will perform the Power On Self
+Tests (POST) and then launch the EFI Boot Manager:
+If no boot option is configured yet you may select EFI Shell [Build-in]. The device
+mapping table will be displayed and the EFI shell script STARTUP.NSH will be executed:
+From here you are able to switch to any other boot disk that has an EFI file system, e.g to
+switch to fs1 type fs1:. In order to go back to the EFI boot manager menu type exit.
+To continue, invoke the HP-UX boot loader. Itâ s an EFI executable (hpux.efi). EFI
+executables (.efi) and EFI shell scripts (.nsh) can be invoked without specifying the
+appendix. This is DOS like ;-)
+fs2:\> hpux
+Pressing any key at this point interrupts the 10 seconds autoboot timeout and invokes
+the OS Loader hpux.efi in interactive mode. At the HPUX> prompt you have several
+possibilities to interact, such as
+Changing boot options:
+HPUX> boot -is for single user mode
+HPUX> boot -lq for LVM quorum mode
+HPUX> boot -lm for maintenance mode boot
+HPUX> boot -tm for failsave mode (no DLKMs etc,)
+HPUX> boot backup for booting backup kernel configuration
+HPUX> boot vmunix.prev for booting previous kernel
+
+then system will boot normally as PA RISC
