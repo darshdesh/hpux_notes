@@ -1,0 +1,10 @@
+Q what is the reason package not started on adoptive node?
+Answer:-
+• Control of the package will not be transferred if package control script hang or failed
+• The run or halt instructions may not run to completion.
+• Global switching will be disabled. Or network switching disable also
+
+• Volume groups may be left active.
+• File systems may still be mounted.
+• IP addresses may still be installed.
+• Services may still be running
