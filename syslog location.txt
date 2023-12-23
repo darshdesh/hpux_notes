@@ -1,0 +1,83 @@
+Re: Different systems, applications errors log locations on hp-ux
+
+System LOG :- /var/adm/syslog/syslog.log
+
+MAIL Log :- /var/adm/syslog/mail.log
+
+DNS Server ;- /var/adm/syslog/named.log
+
+Hardware Events ;- /var/opt/resmon/log/event.log
+
+Software Installation :- /var/adm/sw/swinstall.log
+/var/adm/sw/swagent.log
+
+SU log :- /var/adm/sulog
+
+Printer Daemon :- /var/adm/lp/lpd.log
+
+Audit Log :- Check use "audsys" command
+
+Cron log :- /var/adm/cron/log
+
+Dataprotector :- /var/opt/omni/log/debug.log
+
+/var/adm/syslog/syslog.log is the main log file.If the system reboot, the new log file starts and previous one will be become Oldsyslog.
+Also check logs in /var/opt/resmon/log dir.
+dmesg command also shows error messages if any.
+
+
+U will get all the system logs in file 
+/var/adm/syslog/syslog.log 
+All the swinstall log u will find in the file /var/adm/sw/swagent.log
+All ur system events will be mailed to system in /var/mail.
+
+
+Various log files in HP Unix
+
+1:- Syslog, Old Syslog & mail log
+
+# ll /var/adm/syslog/
+-rw-r--r--   1 root       root         29143 Mar  4 14:08 OLDsyslog.log
+-r--r--r--   1 root       root           32271 Jun 29 01:26 mail.log
+-rw-r--r--   1 root       root         1996112 Jun 29 11:36 syslog.log
+
+2:- Event Log
+
+#ll /var/opt/resmon/log/
+
+lrwxr-xr-x   1 bin   bin    27 Mar 19  2004 api.log -> /etc/opt/resmon/log/api.log
+lrwxr-xr-x   1 bin   bin    30 Mar 19  2004 client.log -> /etc/opt/resmon/log/client.log
+-rw-r--r--   1  root  root   210813 Jun 29 01:26 event.log
+-r--r-----   1   root   root   501871 Apr  4  2004 event.log1
+-r--r-----   1   root   root   500326 Jan  2 04:54 event.log2
+lrwxr-xr-x  1 bin   bin    33 Mar 19  2004 registrar.log -> /etc/opt/resmon/log/registrar.log
+
+
+
+3:- Memory /Activity/Scan Hardware  logs
+
+#ll /var/stm/logs/sys/
+
+-rw-r--r--   1 root       sys          22240 Mar  4 14:23 activity_log
+-rw-r--r--   1 root       sys           2536 Mar  4 14:23 cclogd_activity_log
+-rw-r--r--   1 root       sys           2024 Mar  4 14:23 diaglogd_activity_log
+-rw-r--r--   1 root       sys           2268 Mar  4 14:23 memlogd_activity_log
+-rw-r--r--   1 root       root        111200 Jun 22 19:58 scan_hw_log
+
+#ll /var/stm/logs/os/
+
+-rw-r--r--   1 root       root         72316 Jun 29 14:47 memlog
+
+
+4:-  Shutdown Log
+
+#ll /etc/shutdownl*
+
+ -rw-r--r--   1 bin        bin           1008 Mar  4 14:08 /etc/shutdownlog
+
+5:- rc/shutdown/su Logs
+
+lrw-r--r-T   1 root  sys     11 Mar 19  2004 rc.log -> /etc/rc.log
+lrw-r--r-T   1 root  sys     16 Mar 19  2004 shutdownlog -> /etc/shutdownlog
+-rw-------   1 root  root     6635 Jun 29 11:46 sulog
+
