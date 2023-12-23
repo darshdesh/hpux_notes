@@ -1,0 +1,71 @@
+Some very common ones that can grow quickly are:
+
+/var/adm/syslog/syslog.log (network and system logs)
+/var/adm/diag/LOG* (diagnostic logs)
+/var/adm/wtmp (login/logout, etc)
+/var/adm/syslog/mail.log (mail log)
+/var/adm/lp/log (lp log)
+/var/adm/sw/swcopy.log
+/var/adm/sw/swagentd.log
+/var/adm/sw/swagent.log
+/var/adm/sw/swinstall.log
+/var/adm/sw/patch/PATCH.log
+/var/adm/sw/swmodify.log
+/var/adm/sw/swremove.log
+/var/adm/sw/swpackage.log
+/var/adm/sw/swconfig.log
+/var/adm/sw/swverify.log
+/var/adm/sw/swreg.log
+/var/adm/cron/log
+/var/adm/cron/OLDlog
+/var/adm/syslog
+/var/adm/syslog/mail.log
+/var/adm/syslog/syslog.log
+/var/adm/syslog/OLDsyslog.log
+/var/adm/syslog/mail.logSAMTRM
+/var/adm/lp/log
+/var/adm/lp/oldlog
+/var/adm/ptydaemonlog
+/var/adm/OLDsulog
+/var/adm/rpc.statd.log
+/var/adm/rpc.lockd.log
+/var/adm/automount.log
+/var/adm/vtdaemonlog
+/var/adm/shutdownlog
+/var/adm/rc.log
+/var/adm/sulog
+/var/tmp/swagent.log
+/var/tmp/gatherftp.log
+/var/tmp/sam_remove.log
+/var/spool/lp/lpd.log
+/var/spool/lp/lpana.log
+/var/spool/lp/log
+/var/spool/sw/swagent.log
+/var/ppl/log
+/var/opt/sharedprint/errorlog.test
+/var/opt/dce/config/dce_config.log
+/var/opt/dce/rpc/rpcd.log
+/var/opt/dde/dde_error_log
+/var/opt/hppak/hppak_error_log
+/var/opt/perf/datafiles/logindx
+/var/opt/perf/datafiles/logglob
+/var/opt/perf/datafiles/logappl
+/var/opt/perf/datafiles/logproc
+/var/opt/perf/datafiles/logdev
+/var/sam/log/samlog
+/var/sam/log/samlog.old
+/var/sam/log/br_log
+/var/adm/wtmp
+
+
+cat /dev/null > /var/adm/wtmp
+
+>/var/adm/wtmp
+
+Rather than using the commands: rm, touch, chmod, chown, chgrp in order to
+create an empty file, the cat /dev/null technique retains all the
+characteristics of the old file. Note that zeroing /var/adm/wtmp on a running
+system may cause errors to be reported from the who command. These errors
+are caused by who not finding the users currently logged in. The best way to
+trim /var/adm/wtmp is to do it in single user mode. Do not zero the
+/etc/utmp...this is done automaticall
