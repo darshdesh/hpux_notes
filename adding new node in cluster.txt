@@ -1,0 +1,45 @@
+Adding new node to cluster - Steps for interview point 
+   
+
+  2 comments 
+
+
+
+
+
+
+Steps for adding new node on running cluster
+
+
+ 1. Set up on all nodes, the file /etc/cmcluster/cmclnodelist to include the new node name.
+
+ 2.Get the most up-to-date ASCII configuration file (cmgetconf).
+
+ 3.Query all nodes, including the new node, in the cluster (cmquerycl).
+
+ 4.Compare the ASCII files obtained from cmgetconf and cmquerycl.
+
+ 5.Update the ASCII configuration file obtained from cmquerycl.
+
+ 6.Check the new ASCII configuration file (cmcheckconf).
+
+ 7.Compile and distribute the new binary cluster configuration file (cmapplyconf).
+
+ 8.Start cluster services on the new node (cmrunnode).
+
+ 9.Check for any problems with cmviewcl and the logfile /var/adm/syslog/syslog.log. 
+
+Commands 
+
+ 1.#cmgetconf -v -c clustername /etc/cmcluster/cluster.ascii
+
+ 2.Edit the /etc/cmcluster/cluster.ascii file and add the new node info
+
+ 3.#cmquerycl -v -c cluster_name -n node1 -n node2 cluster.ascii
+
+ 4.cmcheckconf -v -C cluster.ascii
+
+ 5.cmapplyconf -v -C cluster.ascii
+
+ 6.cmrunnode -v node2 (new node)
+ 
