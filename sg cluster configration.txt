@@ -1,0 +1,41 @@
+1.update the network file,host file and .rhost file
+
+2.csshsetup -r nodename
+
+3.cmpreparecl -n node1 -n node2
+
+4.vi /etc/cmcluster/cmnodelist(cluster name).put the entry of nodes in cluster file.
+    node1
+    node2
+
+5.create a lockvg share map file and export vg to another node.
+
+6.update vi /etc/lvmrc in this file put entry vg activate is disabled( 0 )
+     Auto_VG_ACTIVATE= 0
+
+7.cmquerycl -V -C /etc/cmcluster/clusterconf(cluster name)
+
+8.update file with ip,cluster name,lock vg and node name.
+   member time out-14 second
+   auto_start_timeout-60 second
+   polling intervel-2 second
+   n/w failure detection=inout
+   n/w auto failback=yes
+   ip_monitor=
+   max_package=300
+
+
+9.cmcheckconf -V -C /etc/cmcluster/clusterconf
+
+10.cmcheckapply -V -C /etc/cmcluster/clusterconf
+
+11.make a folder like /etc/cmcluster/ESD
+
+12.cmmakepkg -m -sg/all/cmcluster/ESD/dbESD.conf
+             m-make
+
+13.cmcheckconf -V -P /etc/cmcluster/ESD/dbESD.conf
+
+14cmapplyconf -V -P /etc/cmcluster/ESD/dbESD.conf
+
+15.cmmakepkg -i /etc/cmcluster//ESD/dbESD.conf -m nfs/hanfs 
