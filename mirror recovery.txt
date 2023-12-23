@@ -1,0 +1,166 @@
+Mirror recovery consistency : How to change ?? 
+    
+
+Mirror write performance on swap logical volumes may be enhanced by disabling the Mirror Write Cache. If the primary swap volume is also configured as a dump volume, 
+it’s critical to change the consistency recovery policy to NONE to avoid corrupting dump data in case of a system panic. 
+
+
+
+1.Check the current consistency recovery policy on lvol2. 
+
+
+
+
+# lvdisplay /dev/vg00/lvol2 | grep Consistency 
+
+Consistency Recovery MWC 
+
+
+
+2.Reboot the system. 
+
+
+
+
+            # shutdown –ry 0 
+
+
+
+3.Interrupt the boot process and boot to the LVM maintenance mode. Note: You will need a telnet window to the system console. In the HPVL, you will connect via a terminal server,
+ so use the host name and root password for the initial login. 
+
+
+
+
+EFI Boot Manager ver 1.10 [14.61] Firmware ver 2.31 [4411] 
+
+Please select a boot option 
+
+HP-UX Primary Boot: 0/1/1/0.0x1.0x0 
+
+HP-UX HA Alternate Boot: 0/1/1/0.0x0.0x0 
+
+EFI Shell [Built-in] 
+
+Boot Option Maintenance Menu 
+
+System Configuration Menu 
+
+Loading.: HP-UX Primary Boot: 0/1/1/0.0x1.0x0 
+
+Starting: HP-UX Primary Boot: 0/1/1/0.0x1.0x0 
+
+(C) Copyright 1999-2006 Hewlett-Packard Development Company, L.P. 
+
+All rights reserved 
+
+HP-UX Boot Loader for IPF -- Revision 2.035 
+
+Press Any Key to interrupt Autoboot 
+
+\EFI\HPUX\AUTO ==> boot vmunix -lq 
+
+Seconds left till autoboot - 4 
+
+Type 'help' for help 
+
+HPUX> boot vmunix -lm 
+
+> System Memory = 4083 MB 
+
+loading section 0 
+
+............................................................................ (complete) 
+
+loading section 1 
+
+............. (complete) 
+
+loading symbol table
+
+loading System Directory (boot.sys) to MFS 
+
+..... 
+
+loading MFSFILES directory (bootfs) to MFS 
+
+........................... 
+
+Launching /stand/vmunix 
+
+SIZE: Text:38714K + Data:6257K + BSS:20686K = Total:65658K 
+
+Console is on Serial Device 
+
+Booting kernel... 
+
+. 
+
+. 
+
+. 
+
+INIT: SINGLE USER MODE 
+
+INIT: Running /sbin/sh 
+
+# 
+
+
+
+4.Activate the volume group vg00, change the consistency recovery policy, and update the BDRA. 
+
+
+
+
+# vgchange –a y vg00 
+
+vmunix: LVM: Root VG activated 
+
+
+
+5.Change the mirror consistency policy using the lvchange command. 
+
+
+
+
+# lvchange –M n –c n /dev/vg00/lvol2 
+
+Logical volume "/dev/vg00/lvol2" has been successfully changed. 
+
+Volume Group configuration for /dev/vg00 has been saved in /etc/lvmconf/vg00.conf 
+
+
+
+6.Update the BDRA using the lvlnboot -R command. 
+
+
+
+
+# lvlnboot -R 
+
+Volume Group configuration for /dev/vg00 has been saved in /etc/lvmconf/vg00.conf 
+
+# 
+
+
+
+7.Use the lvdisplay command to verify that the change succeeded. 
+
+
+
+
+# lvdisplay /dev/vg00/lvol2 
+
+... 
+
+Consistency Recovery NONE 
+
+
+
+8.Reboot the system. Note that you must always reboot the system after using the LVM maintenance mode. 
+
+
+
+
+# reboot
